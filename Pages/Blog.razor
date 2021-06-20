@@ -1,0 +1,59 @@
+﻿@page "/blog"
+@using MQ_Assign.Data
+@inject BlogService objBlogService
+
+<NavLink class="nav-link" href="AddBlog">
+    <span class="oi oi-person" aria-hidden="true"></span>Add New Blog
+</NavLink>
+
+<h3>Blog</h3>
+
+@if (objbl == null)
+{
+    <p><em>Loading.....</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Date Posted</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bl in objbl)
+            {
+                <tr>
+                    <td>@bl.id</td>
+                    <td>@bl.UserId</td>
+                    <td>@bl.Title</td>
+                    <td>@bl.Content</td>
+                    <td>@bl.DatePosted</td>
+                    <td>
+                        <a class="nav-link" href="EditBlog/@bl.id">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>Edit
+                        </a>
+                        <a class="nav-link" href="DeleteBlog/@bl.id">
+                            <span class="oi oi-trash" aria-hidden="true"></span>Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<MQ_Assign.Data.Blog> objbl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        objbl = await Task.Run(() => objBlogService.GetBlogs());
+    }
+
+}

@@ -1,0 +1,60 @@
+﻿@page "/EditUsers/{CurrentID}"
+@using MQ_Assign.Data;
+@inject UserService objUserService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Users</h3>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <input form="Uname" class="form-control" @bind="@objUser.id" />
+            </div>
+            <div class="form-group">
+                <label for="Uname" class="control-label">User Name</label>
+                <input form="Uname" class="form-control" @bind="@objUser.UserName" />
+            </div>
+            <div class="form-group">
+                <label for="Fname" class="control-label">Full Name</label>
+                <input form="Fname" class="form-control" @bind="@objUser.FullName" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@UpdateUser" value="Add" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@code {
+    [Parameter]
+    public Guid CurrentID { get; set; }
+
+    MQ_Assign.Data.User objUser = new MQ_Assign.Data.User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        objUser = await Task.Run(() => objUserService.GetUserById(CurrentID));
+    }
+
+
+    protected void UpdateUser()
+    {
+        objUserService.UpdateUser(objUser);
+        NavigationManager.NavigateTo("User");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("User");
+    }
+}
+

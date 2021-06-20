@@ -1,0 +1,55 @@
+﻿@page "/user"
+@using MQ_Assign.Data
+@inject UserService objUserService
+
+
+<NavLink class="nav-link" href="AddUser">
+    <span class="oi oi-person" aria-hidden="true"></span> Add New
+</NavLink>
+
+<h3>User</h3>
+
+@if (objuc == null)
+{
+    <p><em>Loading.....</em></p>
+}
+else
+{
+    <table class="table table-responsive-md">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User Name</th>
+                <th>Full Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ur in objuc)
+            {
+                <tr>
+                    <td>@ur.id</td>
+                    <td>@ur.UserName</td>
+                    <td>@ur.FullName</td>
+                    <td>
+                        <a class="nav-link" href="EditUsers/@ur.id">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Edit
+                        </a>
+                        <a class="nav-link" href="DeleteUsers/@ur.id">
+                            <span class="oi oi-trash" aria-hidden="true"></span>Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    List<MQ_Assign.Data.User> objuc;
+
+    protected override async Task OnInitializedAsync()
+    {
+        objuc = await Task.Run(() => objUserService.GetUsers());
+    }
+}

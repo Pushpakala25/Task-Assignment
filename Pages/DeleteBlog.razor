@@ -1,0 +1,67 @@
+﻿@page "/DeleteBlog/{CurrentID}"
+@using MQ_Assign.Data
+@inject BlogService objBlogService
+@inject NavigationManager NavigationManager
+
+<h3>DeleteBlog</h3>
+<h3>Are you sure want to delete this</h3>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label>Blog ID:</label>
+            <label>@objBlog.id</label>
+        </div>
+        <div class="form-group">
+            <label>User ID:</label>
+            <label>@objBlog.UserId</label>
+        </div>
+        <div class="form-group">
+            <label>Title:</label>
+            <label>@objBlog.Title</label>
+        </div>
+        <div class="form-group">
+            <label>Content</label>
+            <label>@objBlog.Content</label>
+        </div>
+        <div class="form-group">
+            <label>DatePosted:</label>
+            <label>@objBlog.DatePosted</label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-danger" @onclick="@DeleteeBlog" value="Delete" />
+            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+
+        </div>
+    </div>
+</div>
+<hr />
+
+@code {
+
+    [Parameter]
+    public Guid CurrentID { get; set; }
+
+    MQ_Assign.Data.Blog objBlog = new MQ_Assign.Data.Blog();
+
+    protected override async Task OnInitializedAsync()
+    {
+        objBlog = await Task.Run(() => objBlogService.GetBlogById(CurrentID));
+    }
+
+
+    protected void DeleteeBlog()
+    {
+        objBlogService.DeleteBlog(objBlog);
+        NavigationManager.NavigateTo("Blog");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Blog");
+    }
+
+}

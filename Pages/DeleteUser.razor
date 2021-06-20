@@ -1,0 +1,59 @@
+﻿@page "/DeleteUsers/{CurrentID}"
+@using MQ_Assign.Data;
+@inject UserService objUserService
+@inject NavigationManager NavigationManager
+
+
+<h3>Delete Users</h3>
+<h3>Are you sure want to delete this</h3>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">
+            <label>User ID:</label>
+            <label>@objUser.id</label>
+        </div>
+        <div class="form-group">
+            <label>User Name:</label>
+            <label>@objUser.UserName</label>
+        </div>
+        <div class="form-group">
+            <label>Full Name:</label>
+            <label>@objUser.FullName</label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-danger" @onclick="@DeleteUserr" value="Delete" />
+            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+
+        </div>
+    </div>
+</div>
+<hr />
+
+@code {
+
+    [Parameter]
+    public Guid CurrentID { get; set; }
+
+    MQ_Assign.Data.User objUser = new MQ_Assign.Data.User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        objUser = await Task.Run(() => objUserService.GetUserById(CurrentID));
+    }
+
+
+    protected void DeleteUserr()
+    {
+        objUserService.DeleteUser(objUser);
+        NavigationManager.NavigateTo("User");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("User");
+    }
+
+}
